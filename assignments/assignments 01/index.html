@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walter's Note</title>
+    <link rel="stylesheet" href="./assets/style.css">
+    <script src="./assets/script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.png">
+    
+</head>
+<body>
+    <header>
+      <!--navbar-->
+        <div class="navbar">
+            <div class="container">
+                <ul>
+                  <li><a href="#">Walter's Note</a></li>
+                </ul>
+              </div>
+          </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="search-bar">
+              <input type="text" placeholder="Search your notes  ">
+            </div>
+
+            <div class="category-choiche">
+                <button class="btn category-btn active">Note</button>
+                <button class="btn category-btn" >Trash</button>
+            </div>
+
+            <div class="card-header">
+                <h1>Last note</h1>
+                <div class="control-view">
+                    <button class="btn btn-grid active"><img src="assets/img/icon/grid.svg"></button>
+                    <button class="btn btn-list"><img src="assets/img/icon/list.svg"></button>
+                </div>
+            </div>
+
+            <div class="card-grid grid-view">
+                <div class="card" data-category="note">
+                    <h2>Shopping list</h2>
+                    <ul>
+                      <li>Regina Toilet paper</li>
+                      <li>Chocolate</li>
+                      <li>Bread</li>
+                      <li>Water</li>
+                    </ul>
+                    <div class="card-actions">
+                        <button class="card-action-btn" data-action="edit">
+                          <img src="assets/img/icon/edit.svg" alt="Modifica">
+                        </button>
+                        <button class="card-action-btn" data-action="delete">
+                          <img src="assets/img/icon/trash.svg" alt="Elimina">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" data-category="note">
+                  <h2>To do</h2>
+                  <ul>
+                    <li>Creative Coding project</li>
+                    <li>Check emails</li>
+                    <li>Call barber</li>
+                  </ul>
+                  <div class="card-actions">
+                      <button class="card-action-btn" data-action="edit">
+                        <img src="assets/img/icon/edit.svg" alt="Modifica">
+                      </button>
+                      <button class="card-action-btn" data-action="delete">
+                        <img src="assets/img/icon/trash.svg" alt="Elimina">
+                      </button>
+                  </div>
+              </div>
+
+
+              <div class="card" data-category="note">
+                <h2>Urgent</h2>
+                  <p>Remember to verify the information collected and update the documentation. </p>
+                <div class="card-actions">
+                    <button class="card-action-btn" data-action="edit">
+                      <img src="assets/img/icon/edit.svg" alt="Modifica">
+                    </button>
+                    <button class="card-action-btn" data-action="delete">
+                      <img src="assets/img/icon/trash.svg" alt="Elimina">
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="card" data-category="note">
+              <h2>Check data</h2>
+                <p>Check that the data entered matches the original sources before archiving.</p>
+              <div class="card-actions">
+                  <button class="card-action-btn" data-action="edit">
+                    <img src="assets/img/icon/edit.svg" alt="Modifica">
+                  </button>
+                  <button class="card-action-btn" data-action="delete">
+                    <img src="assets/img/icon/trash.svg" alt="Elimina">
+                  </button>
+              </div>
+          </div>
+      
+              <div class="card add-card">
+                <div class="add-card-circle">
+                  <img src="assets/img/icon/add.svg" alt="Aggiungi">
+                </div>
+                <p>Add note</p>
+              </div>
+                
+                
+            </div>
+          </div> <!--chiusura container-->
+    </main>
+
+    <!--modal-->
+    <div class="modal hidden">
+  
+      <div class="modal-overlay"></div>
+    
+      <div class="modal-content note-editor">
+        <div class="note-body">
+          <h2>Edit note</h2>
+          <input type="text" id="modal-title" class="note-title" placeholder="Title" required>
+          <textarea id="modal-text" class="note-text" placeholder="Text" required></textarea>
+        </div>
+
+        <div class="note-toolbar">
+          <div class="note-tools-left">
+            <button class="note-tool-btn" id="color-btn"><img src="assets/img/icon/color.svg"></button>
+          
+            <div class="color-picker hidden">
+              <span class="color-option" data-color="#C9DFF1" style="background:#C9DFF1;"></span>
+              <span class="color-option" data-color="#F6FF00" style="background:#F6FF00;"></span>
+              <span class="color-option" data-color="#FFC5C5" style="background:#FFC5C5;"></span>
+              <span class="color-option" data-color="#C5F7DA" style="background:#C5F7DA;"></span>
+              <span class="color-option custom-color" data-color="custom" style="background:#fff; display:flex; justify-content:center; align-items:center; font-weight:700; position:relative; overflow:hidden;">
+                +
+                <input type="color" id="custom-color-picker" class="custom-color-input">
+              </span>
+            </div>
+          
+            <button class="note-tool-btn" id="text-btn"><img src="assets/img/icon/text.svg"></button>
+
+            <div class="text-size-menu hidden">
+              <button class="text-size-option" data-size="increase">+</button>
+              <button class="text-size-option" data-size="decrease">-</button>
+            </div>
+                    </div>
+          <div class="note-tools-right">
+            <button class="note-delete"><img src="assets/img/icon/close.svg"></button>
+            <button class="note-save"><img src="assets/img/icon/save.svg">Save</button>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+
+    
+</body>
+</html>
