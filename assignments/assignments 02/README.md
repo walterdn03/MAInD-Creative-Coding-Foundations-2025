@@ -1,11 +1,11 @@
 SUPSI 2025-26<br>
 Creative Coding<br>
 Marco Lurati, Giovanni Profeta<br>
-Assignments 01
+Assignments 02
 
 # Snake The Game
 Author: Walter De Nicola<br>
-[Pinboard sito](https://walterdenicolapersonale.github.io/MAInD-Creative-Coding-Foundations-2025/assignments/assignments%2001/)<br>
+[Snake The Game](https://walterdn03.github.io/MAInD-Creative-Coding-Foundations-2025/assignments/assignments%2002/)<br>
 
 
 
@@ -44,20 +44,20 @@ theme: redux
 layout: dagre
 ---
 flowchart TB
-Start(["Start"]) --> SelectAvatar["Select Avatar"]
-SelectAvatar --> InitGame["Initialize Game<br>score=0, snake=[10,10]<br>place food, obstacles"]
-InitGame --> GameLoop["Game Loop<br>Move Snake"]
+Start(["Start"]) --> SelectAvatar["Select avatar"]
+SelectAvatar --> InitGame["Initialize game<br>score=0, snake=[10,10]<br>place food, obstacles"]
+InitGame --> GameLoop["Game loop<br>Move Snake"]
 GameLoop --> Collision{"Collision?<br>wall/self/obstacle"}
-Collision -- yes --> GameOver["Game Over!<br>show score"]
-Collision -- no --> FoodCheck{"Eat Food?"}
-FoodCheck -- yes --> GrowSnake["Grow Snake<br>add score<br>place new piece of food"]
+Collision -- yes --> GameOver["Game over!<br>show score"]
+Collision -- no --> FoodCheck{"Eat food?"}
+FoodCheck -- yes --> GrowSnake["Grow snake<br>add score<br>place new piece of food"]
 FoodCheck -- no --> Draw["Draw Frame<br>snake, food, obstacles"]
 GrowSnake --> Draw
 Draw --> GameLoop
 GameOver --> Countdown["Countdown 3s"]
 Countdown --> UserChoice{"User <br>Choice?"}
 UserChoice -- Wait/Restart --> InitGame
-UserChoice -- Change Avatar --> SelectAvatar
+UserChoice -- Change avatar --> SelectAvatar
 GameOver@{ shape: rounded}
 
 ```
@@ -71,6 +71,7 @@ GameOver@{ shape: rounded}
 **Return** none
 
 Checks if the global isMusicMuted variable is false. If so, it triggers the backgroundMusic.play() method.
+
 ---
 
 ### stopBackgroundMusic()
