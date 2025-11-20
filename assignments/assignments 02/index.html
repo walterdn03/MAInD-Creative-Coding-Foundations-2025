@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake The Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pixelify Sans', cursive;
+            background: #000;
+            color: #00ff00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 100%;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ff6b00;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-shadow: 4px 4px 0 #000, 5px 5px 0 #ff0000;
+            animation: blink 0.5s step-end infinite alternate;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0.7; }
+        }
+
+        .arcade-frame {
+            background: linear-gradient(180deg, #1a0033 0%, #0d001a 100%);
+            border: 8px solid #4a0080;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                0 0 0 4px #000,
+                0 0 20px #4a0080,
+                inset 0 0 20px rgba(74, 0, 128, 0.3);
+        }
+
+        #avatarSelection {
+            display: block;
+        }
+
+        .select-title {
+            color: #ffff00;
+            font-size: 1rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .avatar-card {
+            background: #000;
+            border: 4px solid #00ff00;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            box-shadow: 0 4px 0 #004400;
+        }
+
+        .avatar-card.selected {
+            background: #003300;
+            border-color: #00ff00;
+            box-shadow: 0 0 30px #00ff00, 0 4px 0 #004400;
+        }
+
+        .avatar-card:hover {
+            transform: translateY(-2px);
+            border-color: #ffff00;
+            box-shadow: 0 6px 0 #444400, 0 0 20px #ffff00;
+        }
+
+        .avatar-card:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #004400;
+        }
+
+        .pixel-avatar {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+        }
+
+        .avatar-name {
+            font-size: 1rem;
+            margin: 10px 0 5px;
+            color: #ffff00;
+            font-weight: 600;
+        }
+
+        .avatar-desc {
+            font-size: 0.8rem;
+            color: #00ffff;
+            line-height: 1.4;
+        }
+
+        #gameScreen {
+            display: none;
+        }
+
+        .game-container {
+            background: linear-gradient(180deg, #1a0033 0%, #0d001a 100%);
+            border: 8px solid #4a0080;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 
+                0 0 0 4px #000,
+                0 0 30px #4a0080,
+                inset 0 0 30px rgba(74, 0, 128, 0.3);
+            margin-top: 20px;
+        }
+
+        .score-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto 10px;
+            padding: 15px 20px;
+            background: transparent;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .player-info {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .player-name {
+            color: #00ffff;
+        }
+
+        .current-score {
+            color: #ffff00;
+        }
+
+        #gameCanvas {
+            border: 4px solid #00ff00;
+            box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.2),
+                0 0 20px rgba(0, 255, 0, 0.3);
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .mobile-controls {
+            display: none;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .mobile-btn {
+            width: 80px;
+            height: 80px;
+            background: #000;
+            border: 4px solid #00ff00;
+            color: #00ff00;
+            font-size: 24px;
+            font-family: 'Pixelify Sans', cursive;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 0 4px 0 #004400;
+        }
+
+        .mobile-btn:active {
+            background: #00ff00;
+            color: #000;
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #004400;
+        }
+
+        .mobile-btn:nth-child(1) {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .mobile-btn:nth-child(2) {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .mobile-btn:nth-child(3) {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        .mobile-btn:nth-child(4) {
+            grid-column: 2;
+            grid-row: 3;
+        }
+
+        .controls {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background: #000;
+            border: 3px solid #ff00ff;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 0 #660066;
+            text-align: center;
+        }
+
+        .controls h3 {
+            color: #ff00ff;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .controls-text {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        #gameOverOverlay {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            padding: 40px;
+            border: 8px solid #ff0000;
+            box-shadow: 
+                0 0 0 4px #000,
+                0 0 50px #ff0000,
+                inset 0 0 30px rgba(255, 0, 0, 0.2);
+            z-index: 1001;
+            text-align: center;
+            min-width: 300px;
+            max-width: 90vw;
+        }
+
+        #gameOverOverlay h2 {
+            font-size: 2.5rem;
+            color: #ff0000;
+            margin-bottom: 20px;
+            font-weight: 700;
+            animation: gameOverBlink 0.3s step-end infinite;
+        }
+
+        @keyframes gameOverBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0.3; }
+        }
+
+        .stats {
+            margin: 20px 0;
+            font-size: 1rem;
+            color: #00ffff;
+            font-weight: 500;
+        }
+
+        .stats p {
+            margin: 10px 0;
+        }
+
+        .stats span {
+            color: #ffff00;
+        }
+
+        #countdown {
+            font-size: 4rem;
+            color: #00ff00;
+            margin: 20px 0;
+            font-weight: 700;
+        }
+
+        .restart-text {
+            font-size: 0.7rem;
+            color: #ff00ff;
+            margin: 10px 0;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            margin: 10px 5px;
+            background: #000;
+            border: 4px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #004400;
+        }
+
+        .btn:hover {
+            background: #00ff00;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #004400;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #004400;
+        }
+
+        .btn-secondary {
+            border-color: #ff00ff;
+            color: #ff00ff;
+            box-shadow: 0 4px 0 #440044;
+        }
+
+        .btn-secondary:hover {
+            background: #ff00ff;
+            color: #000;
+            box-shadow: 0 6px 0 #440044;
+        }
+
+        .btn-secondary:active {
+            box-shadow: 0 0 0 #440044;
+        }
+
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: #000;
+            border: 4px solid #ffff00;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffff00;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #444400;
+        }
+
+        .music-toggle:hover {
+            background: #ffff00;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #444400, 0 0 20px #ffff00;
+        }
+
+        .music-toggle:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #444400;
+        }
+
+        .music-toggle.muted {
+            border-color: #ff0000;
+            color: #ff0000;
+            box-shadow: 0 4px 0 #440000;
+        }
+
+        .music-toggle.muted:hover {
+            background: #ff0000;
+            box-shadow: 0 6px 0 #440000, 0 0 20px #ff0000;
+        }
+
+        .music-toggle.muted:active {
+            box-shadow: 0 2px 0 #440000;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: grid;
+            }
+            
+            .music-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .score-info {
+                font-size: 1rem;
+            }
+
+            #gameOverOverlay h2 {
+                font-size: 1.8rem;
+            }
+
+            #countdown {
+                font-size: 3rem;
+            }
+        }
+
+        .insert-coin {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #ffff00;
+            animation: coinBlink 1s step-end infinite;
+            z-index: 2;
+        }
+
+        @keyframes coinBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="insert-coin">INSERT COIN</div>
+    <div class="music-toggle" onclick="toggleMusic()">♪ MUSIC ON</div>
+
+    <div class="container">
+        <h1>SNAKE THE GAME</h1>
+
+        <div id="avatarSelection">
+            <div class="arcade-frame">
+                <div class="select-title">SELECT YOUR SNAKE</div>
+                <div class="avatar-grid">
+                    <div class="avatar-card" id="avatar-classic" onclick="selectAvatar('classic')">
+                        <img class="pixel-avatar" src="assets/img/classic.svg" alt="Classic Snake">
+                        <div class="avatar-name">CLASSIC</div>
+                        <div class="avatar-desc">STANDARD<br>SPEED</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-speedy" onclick="selectAvatar('speedy')">
+                        <img class="pixel-avatar" src="assets/img/speedy.svg" alt="Speedy Snake">
+                        <div class="avatar-name">SPEEDY</div>
+                        <div class="avatar-desc">FAST<br>MODE</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-combo" onclick="selectAvatar('combo')">
+                        <img class="pixel-avatar" src="assets/img/combo.svg" alt="Combo Snake">
+                        <div class="avatar-name">COMBO</div>
+                        <div class="avatar-desc">DOUBLE<br>POINTS</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-rainbow" onclick="selectAvatar('rainbow')">
+                        <img class="pixel-avatar" src="assets/img/rainbow.svg" alt="Rainbow Snake">
+                        <div class="avatar-name">RAINBOW</div>
+                        <div class="avatar-desc">COLOR<br>SHIFT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameScreen">
+            <div class="score-info">
+                <div class="player-info">
+                    <span class="player-name">PLAYER 1</span>
+                    <span class="current-score">SCORE: <span id="score">0</span></span>
+                </div>
+            </div>
+            
+
+            <div class="game-container">
+                <canvas id="gameCanvas" width="1000" height="600"></canvas>
+
+                <div class="mobile-controls">
+                    <button class="mobile-btn" onclick="changeDirection('UP')">▲</button>
+                    <button class="mobile-btn" onclick="changeDirection('LEFT')">◄</button>
+                    <button class="mobile-btn" onclick="changeDirection('RIGHT')">►</button>
+                    <button class="mobile-btn" onclick="changeDirection('DOWN')">▼</button>
+                </div>
+                
+                <div class="controls">
+                    <h3>CONTROLS</h3>
+                    <div class="controls-text">
+                        <span>KEYBOARD: ARROW KEYS</span>
+                        <span>|</span>
+                        <span>MOBILE: BUTTONS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameOverOverlay">
+            <h2>GAME OVER</h2>
+            <div class="stats">
+                <p>SCORE: <span id="finalScore">0</span></p>
+            </div>
+            <div id="countdown">3</div>
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="skipCountdown()">RESTART NOW</button>
+                <button class="btn btn-secondary" onclick="changeAvatar()">CHANGE SNAKE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gridSize = 20;
+        const tileCountX = canvas.width / gridSize;
+        const tileCountY = canvas.height / gridSize;
+
+        let snake = [{x: 10, y: 10}];
+        let velocityX = 0;
+        let velocityY = 0;
+        let foodX = 15;
+        let foodY = 15;
+        let score = 0;
+        let gameLoop;
+        let selectedAvatar = null;
+        let gameStartTime;
+        let animationFrame = 0;
+        let obstacles = [];
+        let countdownInterval = null;
+
+        const avatars = {
+            classic: { colors: ['#00ff00'], speed: 100, scoreMultiplier: 1 },
+            speedy: { colors: ['#ff6b00'], speed: 70, scoreMultiplier: 1 },
+            combo: { colors: ['#ffff00'], speed: 100, scoreMultiplier: 2 },
+            rainbow: { colors: ['#ff0000', '#ff6b00', '#ffff00', '#00ff00', '#00ffff', '#ff00ff'], speed: 100, scoreMultiplier: 1 }
+        };
+
+        const GAME_SPEED = 110;
+        const OBSTACLE_COUNT = 5;
+
+        let backgroundMusic = new Audio('assets/sound/soundtrack.mp3');
+        backgroundMusic.loop = true;
+        backgroundMusic.volume = 0.3;
+        
+        let eatSound = new Audio('assets/sound/eat.mp3');
+        eatSound.volume = 0.5;
+        
+        let gameOverSound = new Audio('assets/sound/gameover.mp3');
+        gameOverSound.volume = 0.5;
+        
+        let isMusicMuted = false;
+
+        function playBackgroundMusic() {
+            if (!isMusicMuted) {
+                backgroundMusic.play().catch(e => console.log('Music error:', e));
+            }
+        }
+
+        function stopBackgroundMusic() {
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0;
+        }
+
+        function toggleMusic() {
+            isMusicMuted = !isMusicMuted;
+            const toggle = document.querySelector('.music-toggle');
+            
+            if (isMusicMuted) {
+                stopBackgroundMusic();
+                toggle.textContent = '♪ MUSIC OFF';
+                toggle.classList.add('muted');
+            } else {
+                toggle.textContent = '♪ MUSIC ON';
+                toggle.classList.remove('muted');
+                if (selectedAvatar) {
+                    playBackgroundMusic();
+                }
+            }
+        }
+
+        function playEatSound() {
+            eatSound.currentTime = 0;
+            eatSound.play().catch(e => console.log('Sound error:', e));
+        }
+
+        function playGameOverSound() {
+            gameOverSound.currentTime = 0;
+            gameOverSound.play().catch(e => console.log('Sound error:', e));
+        }
+
+        function selectAvatar(avatarType) {
+            selectedAvatar = avatarType;
+            
+            document.querySelectorAll('.avatar-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            document.getElementById('avatar-' + avatarType).classList.add('selected');
+            
+            score = 0;
+            
+            document.getElementById('avatarSelection').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            
+            if (!isMusicMuted) {
+                playBackgroundMusic();
+            }
+            
+            startGame();
+        }
+
+        function generateObstacles() {
+            obstacles = [];
+            
+            for (let i = 0; i < OBSTACLE_COUNT; i++) {
+                let obstacleX, obstacleY;
+                let valid = false;
+                
+                while (!valid) {
+                    obstacleX = Math.floor(Math.random() * tileCountX);
+                    obstacleY = Math.floor(Math.random() * tileCountY);
+                    
+                    valid = Math.abs(obstacleX - 10) > 3 && Math.abs(obstacleY - 10) > 3;
+                    
+                    for (let obs of obstacles) {
+                        if (obs.x === obstacleX && obs.y === obstacleY) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+                
+                obstacles.push({x: obstacleX, y: obstacleY});
+            }
+        }
+
+        function startGame() {
+            snake = [{x: 10, y: 10}];
+            velocityX = 1;
+            velocityY = 0;
+            animationFrame = 0;
+            gameStartTime = Date.now();
+            generateObstacles();
+            placeFood();
+            updateScore();
+            
+            if (gameLoop) clearInterval(gameLoop);
+            const speed = Math.max(GAME_SPEED, avatars[selectedAvatar].speed);
+            gameLoop = setInterval(update, speed);
+        }
+
+        function update() {
+            moveSnake();
+            if (checkCollision()) {
+                gameOver();
+                return;
+            }
+            if (checkFoodCollision()) {
+                eatFood();
+            }
+            animationFrame++;
+            draw();
+        }
+
+        function moveSnake() {
+            const head = {x: snake[0].x + velocityX, y: snake[0].y + velocityY};
+            snake.unshift(head);
+            snake.pop();
+        }
+
+        function checkCollision() {
+            const head = snake[0];
+            
+            if (head.x < 0 || head.x >= tileCountX || head.y < 0 || head.y >= tileCountY) {
+                return true;
+            }
+            
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+            
+            for (let obs of obstacles) {
+                if (head.x === obs.x && head.y === obs.y) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        function checkFoodCollision() {
+            return snake[0].x === foodX && snake[0].y === foodY;
+        }
+
+        function eatFood() {
+            score += 10 * avatars[selectedAvatar].scoreMultiplier;
+            snake.push({...snake[snake.length - 1]});
+            placeFood();
+            updateScore();
+            playEatSound();
+        }
+
+        function placeFood() {
+            let valid = false;
+            
+            while (!valid) {
+                foodX = Math.floor(Math.random() * tileCountX);
+                foodY = Math.floor(Math.random() * tileCountY);
+                valid = true;
+                
+                for (let segment of snake) {
+                    if (segment.x === foodX && segment.y === foodY) {
+                        valid = false;
+                        break;
+                    }
+                }
+                
+                for (let obs of obstacles) {
+                    if (obs.x === foodX && obs.y === foodY) {
+                        valid = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = '#003300';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= tileCountX; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * gridSize, 0);
+                ctx.lineTo(i * gridSize, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= tileCountY; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, i * gridSize);
+                ctx.lineTo(canvas.width, i * gridSize);
+                ctx.stroke();
+            }
+            
+            ctx.fillStyle = '#ff0000';
+            obstacles.forEach(obs => {
+                ctx.fillRect(obs.x * gridSize + 1, obs.y * gridSize + 1, gridSize - 2, gridSize - 2);
+                ctx.strokeStyle = '#880000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(obs.x * gridSize + 1, obs.y * gridSize + 1, gridSize - 2, gridSize - 2);
+            });
+            
+            snake.forEach((segment, index) => {
+                let color;
+                if (selectedAvatar === 'rainbow') {
+                    const colorIndex = Math.floor((index + animationFrame) / 5) % avatars.rainbow.colors.length;
+                    color = avatars.rainbow.colors[colorIndex];
+                } else {
+                    color = avatars[selectedAvatar].colors[0];
+                }
+                
+                ctx.fillStyle = color;
+                ctx.fillRect(
+                    segment.x * gridSize + 1, 
+                    segment.y * gridSize + 1, 
+                    gridSize - 2, 
+                    gridSize - 2
+                );
+                
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(
+                    segment.x * gridSize + 1, 
+                    segment.y * gridSize + 1, 
+                    gridSize - 2, 
+                    gridSize - 2
+                );
+                
+                if (index === 0) {
+                    ctx.fillStyle = '#000';
+                    const eyeSize = 3;
+                    const eyeOffset = 4;
+                    
+                    if (velocityX === 1) {
+                        ctx.fillRect(segment.x * gridSize + gridSize - eyeOffset - eyeSize, segment.y * gridSize + eyeOffset, eyeSize, eyeSize);
+                        ctx.fillRect(segment.x * gridSize + gridSize - eyeOffset - eyeSize, segment.y * gridSize + gridSize - eyeOffset - eyeSize, eyeSize, eyeSize);
+                    } else if (velocityX === -1) {
+                        ctx.fillRect(segment.x * gridSize + eyeOffset, segment.y * gridSize + eyeOffset, eyeSize, eyeSize);
+                        ctx.fillRect(segment.x * gridSize + eyeOffset, segment.y * gridSize + gridSize - eyeOffset - eyeSize, eyeSize, eyeSize);
+                    } else if (velocityY === -1) {
+                        ctx.fillRect(segment.x * gridSize + eyeOffset, segment.y * gridSize + eyeOffset, eyeSize, eyeSize);
+                        ctx.fillRect(segment.x * gridSize + gridSize - eyeOffset - eyeSize, segment.y * gridSize + eyeOffset, eyeSize, eyeSize);
+                    } else if (velocityY === 1) {
+                        ctx.fillRect(segment.x * gridSize + eyeOffset, segment.y * gridSize + gridSize - eyeOffset - eyeSize, eyeSize, eyeSize);
+                        ctx.fillRect(segment.x * gridSize + gridSize - eyeOffset - eyeSize, segment.y * gridSize + gridSize - eyeOffset - eyeSize, eyeSize, eyeSize);
+                    }
+                }
+            });
+            
+            const foodPulse = Math.sin(animationFrame * 0.2) * 0.5;
+            const fx = foodX * gridSize;
+            const fy = foodY * gridSize;
+            const pixelSize = 4;
+            
+            const applePattern = [
+                [0, 0, 3, 0, 0],
+                [0, 1, 1, 1, 0],
+                [1, 1, 2, 1, 1],
+                [1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 0]
+            ];
+            
+            const colors = {
+                0: null,
+                1: '#ff0000',
+                2: '#ffff00',
+                3: '#00ff00'
+            };
+            
+            applePattern.forEach((row, y) => {
+                row.forEach((pixel, x) => {
+                    if (pixel !== 0) {
+                        ctx.fillStyle = colors[pixel];
+                        ctx.fillRect(
+                            fx + x * pixelSize + foodPulse,
+                            fy + y * pixelSize + foodPulse,
+                            pixelSize,
+                            pixelSize
+                        );
+                        
+                        ctx.strokeStyle = '#000';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(
+                            fx + x * pixelSize + foodPulse,
+                            fy + y * pixelSize + foodPulse,
+                            pixelSize,
+                            pixelSize
+                        );
+                    }
+                });
+            });
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function gameOver() {
+            clearInterval(gameLoop);
+            stopBackgroundMusic();
+            playGameOverSound();
+            
+            document.getElementById('finalScore').textContent = score;
+            
+            document.getElementById('gameOverOverlay').style.display = 'block';
+            startCountdown();
+        }
+
+        function startCountdown() {
+            let countdown = 3;
+            document.getElementById('countdown').textContent = countdown;
+            
+            if (countdownInterval) clearInterval(countdownInterval);
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                document.getElementById('countdown').textContent = countdown;
+                
+                if (countdown === 0) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    document.getElementById('gameOverOverlay').style.display = 'none';
+                    
+                    score = 0;
+                    document.getElementById('score').textContent = score;
+                    
+                    startGame();
+                    if (!isMusicMuted) {
+                        playBackgroundMusic();
+                    }
+                }
+            }, 1000);
+        }
+
+        function skipCountdown() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            document.getElementById('gameOverOverlay').style.display = 'none';
+            
+            score = 0;
+            document.getElementById('score').textContent = score;
+            
+            startGame();
+            if (!isMusicMuted) {
+                playBackgroundMusic();
+            }
+        }
+
+        function changeAvatar() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            
+            document.getElementById('gameOverOverlay').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('avatarSelection').style.display = 'block';
+            
+            selectedAvatar = null;
+            
+            stopBackgroundMusic();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    if (velocityY !== 1) {
+                        velocityX = 0;
+                        velocityY = -1;
+                    }
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    if (velocityY !== -1) {
+                        velocityX = 0;
+                        velocityY = 1;
+                    }
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    if (velocityX !== 1) {
+                        velocityX = -1;
+                        velocityY = 0;
+                    }
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    if (velocityX !== -1) {
+                        velocityX = 1;
+                        velocityY = 0;
+                    }
+                    break;
+            }
+        });
+
+        function changeDirection(direction) {
+            switch(direction) {
+                case 'UP':
+                    if (velocityY !== 1) {
+                        velocityX = 0;
+                        velocityY = -1;
+                    }
+                    break;
+                case 'DOWN':
+                    if (velocityY !== -1) {
+                        velocityX = 0;
+                        velocityY = 1;
+                    }
+                    break;
+                case 'LEFT':
+                    if (velocityX !== 1) {
+                        velocityX = -1;
+                        velocityY = 0;
+                    }
+                    break;
+                case 'RIGHT':
+                    if (velocityX !== -1) {
+                        velocityX = 1;
+                        velocityY = 0;
+                    }
+                    break;
+            }
+        }
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        canvas.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (deltaX > 30 && velocityX !== -1) {
+                    velocityX = 1;
+                    velocityY = 0;
+                } else if (deltaX < -30 && velocityX !== 1) {
+                    velocityX = -1;
+                    velocityY = 0;
+                }
+            } else {
+                if (deltaY > 30 && velocityY !== -1) {
+                    velocityX = 0;
+                    velocityY = 1;
+                } else if (deltaY < -30 && velocityY !== 1) {
+                    velocityX = 0;
+                    velocityY = -1;
+                }
+            }
+        });
+
+        function resizeCanvas() {
+            const maxWidth = Math.min(window.innerWidth - 40, 1000);
+            const maxHeight = Math.min(window.innerHeight - 200, 600);
+            const scale = Math.min(maxWidth / 1000, maxHeight / 600);
+            
+            canvas.style.width = (1000 * scale) + 'px';
+            canvas.style.height = (600 * scale) + 'px';
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+    </script>
+</body>
+</html>
