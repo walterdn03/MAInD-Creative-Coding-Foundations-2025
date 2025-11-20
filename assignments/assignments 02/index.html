@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake The Game</title>
+    <link rel="stylesheet" href="assets/style.css">
+  </head>
+<body>
+    <div class="insert-coin">INSERT COIN</div>
+    <div class="music-toggle" onclick="toggleMusic()">♪ MUSIC ON</div>
+
+    <div class="container">
+        <h1>SNAKE THE GAME</h1>
+
+        <div id="avatarSelection">
+            <div class="arcade-frame">
+                <div class="select-title">SELECT YOUR SNAKE</div>
+                <div class="avatar-grid">
+                    <div class="avatar-card" id="avatar-classic" onclick="selectAvatar('classic')">
+                        <img class="pixel-avatar" src="assets/img/classic.svg">
+                        <div class="avatar-name">CLASSIC</div>
+                        <div class="avatar-desc">STANDARD<br>SPEED</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-speedy" onclick="selectAvatar('speedy')">
+                        <img class="pixel-avatar" src="assets/img/speedy.svg">
+                        <div class="avatar-name">SPEEDY</div>
+                        <div class="avatar-desc">FAST<br>MODE</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-combo" onclick="selectAvatar('combo')">
+                        <img class="pixel-avatar" src="assets/img/combo.svg">
+                        <div class="avatar-name">COMBO</div>
+                        <div class="avatar-desc">DOUBLE<br>POINTS</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-rainbow" onclick="selectAvatar('rainbow')">
+                        <img class="pixel-avatar" src="assets/img/rainbow.svg">
+                        <div class="avatar-name">RAINBOW</div>
+                        <div class="avatar-desc">COLOR<br>SHIFT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameScreen">
+            <div class="score-info">
+                <div class="player-info">
+                    <span class="player-name">PLAYER 1</span>
+                    <span class="current-score">SCORE: <span id="score">0</span></span>
+                </div>
+            </div>
+            
+
+            <div class="game-container">
+                <canvas id="gameCanvas" width="1000" height="600"></canvas>
+
+                <div class="mobile-controls">
+                    <button class="mobile-btn" onclick="changeDirection('UP')">▲</button>
+                    <button class="mobile-btn" onclick="changeDirection('LEFT')">◄</button>
+                    <button class="mobile-btn" onclick="changeDirection('RIGHT')">►</button>
+                    <button class="mobile-btn" onclick="changeDirection('DOWN')">▼</button>
+                </div>
+
+                <div class="controls">
+                    <h3>CONTROLS</h3>
+                    <div class="controls-text">
+                        <span>KEYBOARD: ARROW KEYS</span>
+                        <span>|</span>
+                        <span>MOBILE: BUTTONS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameOverOverlay">
+            <h2>GAME OVER</h2>
+            <div class="stats">
+                <p>SCORE: <span id="finalScore">0</span></p>
+            </div>
+            <div id="countdown">3</div>
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="skipCountdown()">RESTART NOW</button>
+                <button class="btn btn-secondary" onclick="changeAvatar()">CHANGE SNAKE</button>
+            </div>
+        </div>
+    </div>
+    <script src="assets/script.js"></script>
+</body>
+</html>
