@@ -40,26 +40,25 @@ If the snake touches an obstacle or its tail, the game ends and the game over sc
 ```mermaid
 ---
 config:
-theme: redux
-layout: dagre
+  theme: redux
+  layout: dagre
 ---
 flowchart TB
-Start(["Start"]) --> SelectAvatar["Select avatar"]
-SelectAvatar --> InitGame["Initialize game<br>score=0, snake=[10,10]<br>place food, obstacles"]
-InitGame --> GameLoop["Game loop<br>Move Snake"]
-GameLoop --> Collision{"Collision?<br>wall/self/obstacle"}
-Collision -- yes --> GameOver["Game over!<br>show score"]
-Collision -- no --> FoodCheck{"Eat food?"}
-FoodCheck -- yes --> GrowSnake["Grow snake<br>add score<br>place new piece of food"]
-FoodCheck -- no --> Draw["Draw Frame<br>snake, food, obstacles"]
-GrowSnake --> Draw
-Draw --> GameLoop
-GameOver --> Countdown["Countdown 3s"]
-Countdown --> UserChoice{"User <br>Choice?"}
-UserChoice -- Wait/Restart --> InitGame
-UserChoice -- Change avatar --> SelectAvatar
-GameOver@{ shape: rounded}
-
+    Start(["Start"]) --> SelectAvatar["Select Avatar"]
+    SelectAvatar --> InitGame["Initialize Game<br>score=0, snake=[10,10]<br>place food, obstacles"]
+    InitGame --> GameLoop["Game loop<br>Move snake⠀"]
+    GameLoop --> Collision{"Collision?<br>wall/self/obstacle"}
+    Collision -- yes --> GameOver["Game Over!<br>show score"]
+    Collision -- no --> FoodCheck{"Eat food?"}
+    FoodCheck -- yes --> GrowSnake["Grow snake<br>add score<br>place new piece of food"]
+    FoodCheck -- no --> Draw["Draw frame<br>snake, food, obstacles"]
+    GrowSnake --> Draw
+    Draw --> GameLoop
+    GameOver --> Countdown["Countdown 3s"]
+    Countdown --> UserChoice{"User <br>choice?"}
+    UserChoice -- Wait/Restart --> InitGame
+    UserChoice -- Change Avatar --> SelectAvatar
+    GameOver@{ shape: rounded}
 ```
 
 ## Function
@@ -116,7 +115,7 @@ Resets the gameOverSound audio time to 0 and plays the sound effect. Called when
 
 ### selectAvatar(avatarType)
 
-**Parameters: ** avatarType (String)
+**Parameters:** avatarType (String)
 
 **Return:** None
 
