@@ -71,6 +71,7 @@ GameOver@{ shape: rounded}
 **Return** none
 
 Checks if the global isMusicMuted variable is false. If so, it triggers the backgroundMusic.play() method.
+
 ---
 
 ### stopBackgroundMusic()
