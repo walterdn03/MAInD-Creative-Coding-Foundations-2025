@@ -7,7 +7,7 @@
 
         // Meteo API 
         const WEATHER_API_KEY = '83b8891250076b33dd8662f09fd02dc0';
-        const WEATHER_API_URL = 'http://api.weatherstack.com/current';
+        const WEATHER_API_URL = 'https://api.weatherstack.com/current';
 
         let playerName = '';
         let playerBestScore = 0; // Best score globale
