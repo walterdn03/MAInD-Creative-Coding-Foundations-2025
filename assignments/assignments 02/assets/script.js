@@ -1,8 +1,8 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const gridSize = 20;
-const tileCountX = canvas.width / gridSize;
-const tileCountY = canvas.height / gridSize;
+let gridSize = 20;
+let tileCountX = canvas.width / gridSize;
+let tileCountY = canvas.height / gridSize;
 
 // variabili gioco//
 let snake = [{x: 10, y: 10}];
@@ -519,12 +519,41 @@ canvas.addEventListener('touchend', (e) => {
 });
 
 function resizeCanvas() {
-    const maxWidth = Math.min(window.innerWidth - 40, 1000);
-    const maxHeight = Math.min(window.innerHeight - 200, 600);
-    const scale = Math.min(maxWidth / 1000, maxHeight / 600);
-    
-    canvas.style.width = (1000 * scale) + 'px';
-    canvas.style.height = (600 * scale) + 'px';
+    const isMobile = window.innerWidth <= 768;
+    //adattamento canvas x mobile
+    if (isMobile) {
+        const maxWidth = window.innerWidth - 20;
+        const maxHeight = window.innerHeight - 280;
+        
+        //caselle più grandi
+        gridSize = 25;
+        
+        const numTilesX = Math.floor(maxWidth / gridSize);
+        const numTilesY = Math.floor(maxHeight / gridSize);
+        
+        canvas.width = numTilesX * gridSize;
+        canvas.height = numTilesY * gridSize;
+        
+        tileCountX = numTilesX;
+        tileCountY = numTilesY;
+        
+        canvas.style.width = canvas.width + 'px';
+        canvas.style.height = canvas.height + 'px';
+    } else {
+        //dimensioni standard desktop
+        gridSize = 20;
+        canvas.width = 1000;
+        canvas.height = 600;
+        tileCountX = 50;
+        tileCountY = 30;
+        
+        const maxWidth = Math.min(window.innerWidth - 40, 1000);
+        const maxHeight = Math.min(window.innerHeight - 200, 600);
+        const scale = Math.min(maxWidth / 1000, maxHeight / 600);
+        
+        canvas.style.width = (1000 * scale) + 'px';
+        canvas.style.height = (600 * scale) + 'px';
+    }
 }
 
 window.addEventListener('resize', resizeCanvas);

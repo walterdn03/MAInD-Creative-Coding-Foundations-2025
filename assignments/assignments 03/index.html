@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake The Game</title>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="insert-coin">INSERT COIN</div>
+    <div class="music-toggle" onclick="toggleMusic()">♪ MUSIC ON</div>
+
+    <div class="container">
+        <h1>SNAKE THE GAME</h1>
+
+        <!-- ENTER NAME SCREEN -->
+        <div id="enterName" style="display: none;">
+            <div class="arcade-frame">
+                <div class="menu-title">WELCOME PLAYER!</div>
+                <p style="color: #00ffff; margin-bottom: 30px; font-size: 1rem;">Enter your name to play</p>
+                <div class="save-score-form">
+                    <input type="text" id="initialPlayerName" placeholder="YOUR NAME" maxlength="15">
+                    <button class="menu-btn" onclick="checkAndSaveName()">CONTINUE</button>
+                </div>
+                <p style="color: #ffff00; margin-top: 20px; font-size: 0.8rem;">
+                    Your Best Score: <span id="bestScoreDisplay">0</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- NAME CONFIRMATION DIALOG -->
+        <div id="nameConfirmation" style="display: none;">
+            <div class="arcade-frame">
+                <div class="menu-title">⚠️ NAME ALREADY EXISTS</div>
+                <p style="color: #00ffff; margin: 20px 0; font-size: 1rem;">
+                    The name "<span style="color: #ffff00;" id="confirmNameDisplay"></span>" already exists<br>
+                    with a best score of <span style="color: #ffff00;" id="confirmScoreDisplay">0</span>
+                </p>
+                <p style="color: #ff6b00; margin: 20px 0; font-size: 0.9rem;">
+                    Is this your account?
+                </p>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+                    <button class="btn" onclick="confirmYes()">✓ YES, IT'S ME</button>
+                    <button class="btn btn-secondary" onclick="confirmNo()">✗ CHOOSE ANOTHER NAME</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CITY SELECTION DIALOG -->
+        <div id="citySelection" style="display: none;">
+            <div class="arcade-frame">
+                <div class="menu-title">📍 CHOOSE CITY</div>
+                <p style="color: #00ffff; margin: 20px 0; font-size: 0.9rem;">
+                    Enter city name to get weather
+                </p>
+                <div class="save-score-form">
+                    <input type="text" id="cityInput" placeholder="CITY NAME (e.g. Milan, Tokyo)" maxlength="50">
+                    <button class="menu-btn" onclick="fetchWeatherByCity()">GET WEATHER</button>
+                    <button class="btn btn-secondary" style="margin-top: 10px;" onclick="useCurrentLocation()">📍 USE MY LOCATION</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN MENU -->
+        <div id="mainMenu">
+            <div class="arcade-frame">
+                <div class="menu-title">MAIN MENU</div>
+                
+                <!-- Weather Display -->
+                <div id="weatherDisplay" style="background: #000; border: 2px solid #00ffff; padding: 10px; margin-bottom: 20px; font-size: 0.9rem;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <img id="weatherIcon" src="" alt="" style="width: 40px; height: 40px; display: none;">
+                        <div style="flex: 1;">
+                            <div style="color: #00ffff;">
+                                <span id="weatherCity">Loading...</span> - <span id="weatherTemp">--</span>°C
+                            </div>
+                            <div style="color: #ffff00; font-size: 0.8rem;" id="weatherCondition">--</div>
+                            <div style="color: #ff6b00; font-size: 0.75rem;" id="weatherEffect">Checking weather...</div>
+                        </div>
+                        <button onclick="changeCityManually()" style="background: #000; border: 2px solid #ffff00; color: #ffff00; padding: 8px 12px; font-family: 'Pixelify Sans', cursive; font-size: 0.8rem; cursor: pointer; white-space: nowrap;">
+                            📍 CHANGE CITY
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Info giocatore se loggato -->
+                <div id="playerInfo" style="display: none; color: #00ffff; margin-bottom: 20px; font-size: 1rem;">
+                    <p>Player: <span style="color: #ffff00;" id="menuPlayerName"></span></p>
+                    <p>Best Score: <span style="color: #ffff00;" id="menuBestScore">0</span></p>
+                </div>
+                
+                <!-- Messaggio se non loggato -->
+                <div id="guestInfo" style="color: #ff6b00; margin-bottom: 20px; font-size: 0.9rem;">
+                    <p>👤 Playing as Guest</p>
+                    <p style="font-size: 0.8rem;">Enter your name to save scores!</p>
+                </div>
+                
+                <div class="menu-buttons">
+                    <button class="menu-btn" onclick="startGameFlow()">🎮 START GAME</button>
+                    <button class="menu-btn" onclick="showSection('leaderboard')">🏆 LEADERBOARD</button>
+                    <button class="menu-btn" onclick="showSection('howToPlay')">❓ HOW TO PLAY</button>
+                    <button id="changePlayerBtn" class="menu-btn" style="border-color: #ff00ff; color: #ff00ff; display: none;" onclick="changePlayer()">👤 CHANGE PLAYER</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOW TO PLAY -->
+        <div id="howToPlay" style="display: none;">
+            <div class="arcade-frame">
+                <div class="menu-title">HOW TO PLAY</div>
+                <div class="instructions">
+                    <p>🐍 Control the snake using arrow keys or on-screen buttons</p>
+                    <p>🍎 Eat apples to grow and gain points</p>
+                    <p>🚫 Avoid walls, obstacles, and yourself</p>
+                    <p>⭐ Choose different snakes with special abilities</p>
+                    <div style="margin-top: 30px;">
+                        <p><strong>CLASSIC:</strong> Standard speed</p>
+                        <p><strong>SPEEDY:</strong> Faster movement</p>
+                        <p><strong>COMBO:</strong> Double points!</p>
+                        <p><strong>RAINBOW:</strong> Color changing style</p>
+                    </div>
+                </div>
+                <button class="menu-btn" style="margin-top: 30px;" onclick="showSection('mainMenu')">← BACK TO MENU</button>
+            </div>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div id="leaderboard" style="display: none;">
+            <div class="arcade-frame">
+                <div class="menu-title">🏆 LEADERBOARD</div>
+                
+                <!-- Filtri modalità -->
+                <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                    <button class="filter-btn active" data-filter="all" onclick="filterLeaderboard('all')">ALL</button>
+                    <button class="filter-btn" data-filter="classic" onclick="filterLeaderboard('classic')">🐍 CLASSIC</button>
+                    <button class="filter-btn" data-filter="speedy" onclick="filterLeaderboard('speedy')">⚡ SPEEDY</button>
+                    <button class="filter-btn" data-filter="combo" onclick="filterLeaderboard('combo')">💎 COMBO</button>
+                    <button class="filter-btn" data-filter="rainbow" onclick="filterLeaderboard('rainbow')">🌈 RAINBOW</button>
+                </div>
+                
+                <div id="leaderboardContent" class="leaderboard-content">
+                    <div class="loading">Loading scores...</div>
+                </div>
+                <button class="menu-btn" style="margin-top: 30px;" onclick="showSection('mainMenu')">← BACK TO MENU</button>
+            </div>
+        </div>
+
+        <div id="avatarSelection" style="display: none;">
+            <div class="arcade-frame">
+                <div class="select-title">SELECT YOUR SNAKE</div>
+                <div class="avatar-grid">
+                    <div class="avatar-card" id="avatar-classic" onclick="selectAvatar('classic')">
+                        <img class="pixel-avatar" src="assets/img/classic.svg" alt="Classic Snake">
+                        <div class="avatar-name">CLASSIC</div>
+                        <div class="avatar-desc">STANDARD<br>SPEED</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-speedy" onclick="selectAvatar('speedy')">
+                        <img class="pixel-avatar" src="assets/img/speedy.svg" alt="Speedy Snake">
+                        <div class="avatar-name">SPEEDY</div>
+                        <div class="avatar-desc">FAST<br>MODE</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-combo" onclick="selectAvatar('combo')">
+                        <img class="pixel-avatar" src="assets/img/combo.svg" alt="Combo Snake">
+                        <div class="avatar-name">COMBO</div>
+                        <div class="avatar-desc">DOUBLE<br>POINTS</div>
+                    </div>
+                    <div class="avatar-card" id="avatar-rainbow" onclick="selectAvatar('rainbow')">
+                        <img class="pixel-avatar" src="assets/img/rainbow.svg" alt="Rainbow Snake">
+                        <div class="avatar-name">RAINBOW</div>
+                        <div class="avatar-desc">COLOR<br>SHIFT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameScreen">
+            <div class="score-info">
+                <div class="player-info">
+                    <span class="player-name" id="currentPlayerName">PLAYER 1</span>
+                    <span class="current-score">SCORE: <span id="score">0</span></span>
+                    <span style="color: #ffff00;" title="Best score for this mode">BEST: <span id="bestScoreGame">0</span></span>
+                    <span style="color: #00ffff;" id="gameWeatherInfo">🌤️ --°C</span>
+                </div>
+            </div>
+            
+
+            <div class="game-container">
+                <canvas id="gameCanvas" width="1000" height="600"></canvas>
+
+                <div class="mobile-controls">
+                    <button class="mobile-btn" onclick="changeDirection('UP')">▲</button>
+                    <button class="mobile-btn" onclick="changeDirection('LEFT')">◄</button>
+                    <button class="mobile-btn" onclick="changeDirection('RIGHT')">►</button>
+                    <button class="mobile-btn" onclick="changeDirection('DOWN')">▼</button>
+                </div>
+
+                <div class="controls">
+                    <h3>CONTROLS</h3>
+                    <div class="controls-text">
+                        <span>KEYBOARD: ARROW KEYS</span>
+                        <span>|</span>
+                        <span>MOBILE: BUTTONS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameOverOverlay">
+            <h2>GAME OVER</h2>
+            <div class="stats">
+                <p>PLAYER: <span style="color: #00ffff;" id="gameOverPlayerName"></span></p>
+                <p>SCORE: <span id="finalScore">0</span></p>
+                <p id="newRecordMessage" style="display: none; color: #ffff00; font-size: 1.2rem; margin-top: 10px;">
+                    🏆 NEW RECORD! 🏆
+                </p>
+            </div>
+            <div id="countdown">3</div>
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="skipCountdown()">RESTART NOW</button>
+                <button class="btn btn-secondary" onclick="changeAvatar()">CHANGE SNAKE</button>
+                <button class="btn btn-secondary" onclick="backToMenu()">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/script.js"></script>
+
+</body>
+</html>

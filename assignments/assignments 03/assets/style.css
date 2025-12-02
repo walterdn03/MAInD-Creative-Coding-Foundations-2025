@@ -1,0 +1,684 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Pixelify Sans', cursive;
+    background: #000;
+    color: #00ff00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* effetto pixel */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 1000;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    pointer-events: none;
+    z-index: 999;
+}
+
+.container {
+    text-align: center;
+    max-width: 100%;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/*titolo x snake*/
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #ff6b00;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-shadow: 4px 4px 0 #000, 5px 5px 0 #ff0000;
+    animation: blink 0.5s step-end infinite alternate;
+}
+
+@keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.7; }
+}
+
+.arcade-frame {
+    background: linear-gradient(180deg, #1a0033 0%, #0d001a 100%);
+    border: 8px solid #4a0080;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 
+        0 0 0 4px #000,
+        0 0 20px #4a0080,
+        inset 0 0 20px rgba(74, 0, 128, 0.3);
+}
+
+#avatarSelection {
+    display: block;
+}
+
+.select-title {
+    color: #ffff00;
+    font-size: 1rem;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.menu-title {
+    color: #ffff00;
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.menu-btn {
+    padding: 20px 30px;
+    background: #000;
+    border: 4px solid #00ff00;
+    color: #00ff00;
+    font-family: 'Pixelify Sans', cursive;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 6px 0 #004400;
+}
+
+.menu-btn:hover {
+    background: #00ff00;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #004400, 0 0 20px #00ff00;
+}
+
+.menu-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #004400;
+}
+
+.instructions {
+    color: #00ffff;
+    font-size: 1rem;
+    line-height: 2;
+    text-align: left;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.instructions p {
+    margin: 15px 0;
+}
+
+.instructions strong {
+    color: #ffff00;
+}
+
+.leaderboard-content {
+    min-height: 300px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.loading {
+    color: #ffff00;
+    font-size: 1.2rem;
+    padding: 50px;
+    animation: blink 1s step-end infinite;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.leaderboard-table th {
+    background: #000;
+    color: #ffff00;
+    padding: 15px;
+    border: 2px solid #ffff00;
+    font-size: 1rem;
+}
+
+.leaderboard-table td {
+    background: #000;
+    color: #00ff00;
+    padding: 12px;
+    border: 2px solid #00ff00;
+    font-size: 0.9rem;
+}
+
+.leaderboard-table tr:nth-child(1) td {
+    background: #1a1a00;
+    color: #ffff00;
+    font-weight: 700;
+    border-color: #ffff00;
+}
+
+.leaderboard-table tr:nth-child(2) td {
+    background: #0d0d0d;
+    color: #cccccc;
+}
+
+.leaderboard-table tr:nth-child(3) td {
+    background: #1a0d00;
+    color: #ff6b00;
+}
+
+.rank-medal {
+    font-size: 1.2rem;
+}
+
+.save-score-form {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+.save-score-form input {
+    padding: 15px;
+    background: #000;
+    border: 3px solid #00ff00;
+    color: #00ff00;
+    font-family: 'Pixelify Sans', cursive;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.save-score-form input[type="password"] {
+    letter-spacing: 8px;
+    font-size: 1.5rem;
+}
+
+.save-score-form input::placeholder {
+    color: #006600;
+    letter-spacing: normal;
+    font-size: 1rem;
+}
+
+.save-score-form input:focus {
+    outline: none;
+    border-color: #ffff00;
+    box-shadow: 0 0 20px #00ff00;
+}
+
+.filter-btn {
+    padding: 10px 15px;
+    background: #000;
+    border: 3px solid #00ff00;
+    color: #00ff00;
+    font-family: 'Pixelify Sans', cursive;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 0 #004400;
+}
+
+.filter-btn:hover {
+    background: #003300;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 #004400;
+}
+
+.filter-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #004400;
+}
+
+.filter-btn.active {
+    background: #00ff00;
+    color: #000;
+    box-shadow: 0 0 20px #00ff00, 0 3px 0 #004400;
+}
+
+/*selezione avatar*/
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.avatar-card {
+    background: #000;
+    border: 4px solid #00ff00;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    box-shadow: 0 4px 0 #004400;
+}
+
+.avatar-card.selected {
+    background: #003300;
+    border-color: #00ff00;
+    box-shadow: 0 0 30px #00ff00, 0 4px 0 #004400;
+}
+
+.avatar-card:hover {
+    transform: translateY(-2px);
+    border-color: #ffff00;
+    box-shadow: 0 6px 0 #444400, 0 0 20px #ffff00;
+}
+
+.avatar-card:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #004400;
+}
+
+.pixel-avatar {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 15px;
+}
+
+.avatar-name {
+    font-size: 1rem;
+    margin: 10px 0 5px;
+    color: #ffff00;
+    font-weight: 600;
+}
+
+.avatar-desc {
+    font-size: 0.8rem;
+    color: #00ffff;
+    line-height: 1.4;
+}
+
+#gameScreen {
+    display: none;
+}
+
+/*area gioco*/
+.game-container {
+    background: linear-gradient(180deg, #1a0033 0%, #0d001a 100%);
+    border: 8px solid #4a0080;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 
+        0 0 0 4px #000,
+        0 0 30px #4a0080,
+        inset 0 0 30px rgba(74, 0, 128, 0.3);
+    margin-top: 20px;
+}
+
+.score-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto 10px;
+    padding: 15px 20px;
+    background: transparent;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.player-info {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.player-name {
+    color: #00ffff;
+}
+
+.current-score {
+    color: #ffff00;
+}
+
+#gameCanvas {
+    border: 4px solid #00ff00;
+    box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.2),
+        0 0 20px rgba(0, 255, 0, 0.3);
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/*controlli x per il mobile*/
+.mobile-controls {
+    display: none;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/*botton mobile*/
+.mobile-btn {
+    width: 80px;
+    height: 80px;
+    background: #000;
+    border: 4px solid #00ff00;
+    color: #00ff00;
+    font-size: 24px;
+    font-family: 'Pixelify Sans', cursive;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: 0 4px 0 #004400;
+}
+
+.mobile-btn:active {
+    background: #00ff00;
+    color: #000;
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #004400;
+}
+
+.mobile-btn:nth-child(1) {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.mobile-btn:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.mobile-btn:nth-child(3) {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.mobile-btn:nth-child(4) {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.controls {
+    margin-top: 20px;
+    padding: 15px 20px;
+    background: #000;
+    border: 3px solid #ff00ff;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 0 #660066;
+    text-align: center;
+}
+
+.controls h3 {
+    color: #ff00ff;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.controls-text {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/*overlay game over*/
+#gameOverOverlay {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #000;
+    padding: 40px;
+    border: 8px solid #ff0000;
+    box-shadow: 0 0 0 4px #000, 0 0 50px #ff0000, inset 0 0 30px rgba(255, 0, 0, 0.2);
+    z-index: 1001;
+    text-align: center;
+    min-width: 300px;
+    max-width: 90vw;
+}
+
+#gameOverOverlay h2 {
+    font-size: 2.5rem;
+    color: #ff0000;
+    margin-bottom: 20px;
+    font-weight: 700;
+    animation: gameOverBlink 0.3s step-end infinite;
+}
+
+@keyframes gameOverBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.3; }
+}
+
+.stats {
+    margin: 20px 0;
+    font-size: 1rem;
+    color: #00ffff;
+    font-weight: 500;
+}
+
+.stats p {
+    margin: 10px 0;
+}
+
+.stats span {
+    color: #ffff00;
+}
+
+#countdown {
+    font-size: 4rem;
+    color: #00ff00;
+    margin: 20px 0;
+    font-weight: 700;
+}
+
+.restart-text {
+    font-size: 0.7rem;
+    color: #ff00ff;
+    margin: 10px 0;
+}
+
+.btn {
+    padding: 12px 20px;
+    margin: 10px 5px;
+    background: #000;
+    border: 4px solid #00ff00;
+    color: #00ff00;
+    font-family: 'Pixelify Sans', cursive;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 #004400;
+}
+
+.btn:hover {
+    background: #00ff00;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #004400;
+}
+
+.btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #004400;
+}
+
+.btn-secondary {
+    border-color: #ff00ff;
+    color: #ff00ff;
+    box-shadow: 0 4px 0 #440044;
+}
+
+.btn-secondary:hover {
+    background: #ff00ff;
+    color: #000;
+    box-shadow: 0 6px 0 #440044;
+}
+
+.btn-secondary:active {
+    box-shadow: 0 0 0 #440044;
+}
+
+.music-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    background: #000;
+    border: 4px solid #ffff00;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #ffff00;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 #444400;
+}
+
+.music-toggle:hover {
+    background: #ffff00;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #444400, 0 0 20px #ffff00;
+}
+
+.music-toggle:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #444400;
+}
+
+.music-toggle.muted {
+    border-color: #ff0000;
+    color: #ff0000;
+    box-shadow: 0 4px 0 #440000;
+}
+
+.music-toggle.muted:hover {
+    background: #ff0000;
+    box-shadow: 0 6px 0 #440000, 0 0 20px #ff0000;
+}
+
+.music-toggle.muted:active {
+    box-shadow: 0 2px 0 #440000;
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: grid;
+    }
+    
+    .music-toggle {
+        top: 10px;
+        right: 10px;
+        padding: 8px 12px;
+        font-size: 0.7rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    .score-info {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+    }
+
+    .game-container {
+        padding: 10px;
+    }
+
+    .arcade-frame {
+        padding: 15px;
+    }
+
+    .controls {
+        padding: 10px 15px;
+        margin-top: 10px;
+        font-size: 0.8rem;
+    }
+
+    .controls h3 {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    #gameOverOverlay {
+        padding: 30px 20px;
+    }
+
+    #gameOverOverlay h2 {
+        font-size: 1.8rem;
+    }
+
+    #countdown {
+        font-size: 3rem;
+    }
+
+    .container {
+        padding: 10px;
+    }
+}
+
+.insert-coin {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #ffff00;
+    animation: coinBlink 1s step-end infinite;
+    z-index: 2;
+}
+
+@keyframes coinBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
