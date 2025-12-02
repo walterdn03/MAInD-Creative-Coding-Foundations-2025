@@ -5,7 +5,7 @@ Assignments 03
 
 # Snake The Game
 Author: Walter De Nicola<br>
-[Snake The Game](https://walterdn03.github.io/MAInD-Creative-Coding-Foundations-2025/assignments/assignments%2002/)<br>
+[Snake The Game](https://walterdn03.github.io/MAInD-Creative-Coding-Foundations-2025/assignments/assignments%2003/)<br>
 
 
 

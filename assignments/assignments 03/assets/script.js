@@ -584,6 +584,7 @@
             stopBackgroundMusic();
         }
 
+        //importante
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         let gridSize = 20;
@@ -763,7 +764,7 @@
             if (gameLoop) clearInterval(gameLoop);
             
             // Applica il modificatore di velocità basato sul meteo
-            const baseSpeed = Math.max(GAME_SPEED, avatars[selectedAvatar].speed);
+            const baseSpeed = Math.min(GAME_SPEED, avatars[selectedAvatar].speed);
             const weatherAdjustedSpeed = Math.round(baseSpeed * weatherData.speedModifier);
             
             gameLoop = setInterval(update, weatherAdjustedSpeed);
