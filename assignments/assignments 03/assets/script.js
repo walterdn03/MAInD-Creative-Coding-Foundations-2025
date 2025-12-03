@@ -6,21 +6,21 @@
         const PLAYER_NAME_KEY = 'snakePlayerName';
 
         // Meteo API 
-        const WEATHER_API_KEY = '83b8891250076b33dd8662f09fd02dc0';
+        const WEATHER_API_KEY = 'b69fe8d0bd967002340fe18c974312bf';
         const WEATHER_API_URL = 'https://api.weatherstack.com/current';
 
         let playerName = '';
-        let playerBestScore = 0; // Best score globale
-        let playerBestScoreThisMode = 0; // Best score modalità sleezionata
-        let tempNameToCheck = ''; // Nome temp.
-        let skipConfirmation = false; // Flag per saltare la conferma dopo un rifiuto
+        let playerBestScore = 0; 
+        let playerBestScoreThisMode = 0; 
+        let tempNameToCheck = ''; 
+        let skipConfirmation = false; 
 
         // Dati Meteo
         let weatherData = {
             temp: 20,
             condition: 'Clear',
             city: 'Unknown',
-            speedModifier: 1.0, // Modificatore velocità basato su temperatura
+            speedModifier: 1.0, 
             icon: '01d'
         };
 
@@ -206,10 +206,8 @@
         // Start game flow - controlla se serve il nome
         function startGameFlow() {
             if (playerName) {
-                // se nome presente vai ad avatar
                 showSection('avatarSelection');
             } else {
-                // sennò chiedi nome
                 showSection('enterName');
             }
         }
@@ -425,7 +423,6 @@
                 
                 console.log(`[SAVE CHECK] SAVING - new record for ${selectedAvatar} mode!`);
                 
-                // Aggiorna il best score globale (per display)
                 playerBestScore = Math.max(playerBestScore, finalScore);
                 // Aggiorna anche il best score per questa modalità
                 playerBestScoreThisMode = finalScore;
@@ -598,7 +595,7 @@
         let foodX = 15;
         let foodY = 15;
         let score = 0;
-        let gameLoop;
+        let gameLoop;,
         let selectedAvatar = null;
         let gameStartTime;
         let animationFrame = 0;
