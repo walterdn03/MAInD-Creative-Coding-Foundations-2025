@@ -423,6 +423,7 @@
                 
                 console.log(`[SAVE CHECK] SAVING - new record for ${selectedAvatar} mode!`);
                 
+                // Aggiorna il best score globale (per display)
                 playerBestScore = Math.max(playerBestScore, finalScore);
                 // Aggiorna anche il best score per questa modalità
                 playerBestScoreThisMode = finalScore;
