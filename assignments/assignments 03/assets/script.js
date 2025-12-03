@@ -595,7 +595,7 @@
         let foodX = 15;
         let foodY = 15;
         let score = 0;
-        let gameLoop;,
+        let gameLoop;
         let selectedAvatar = null;
         let gameStartTime;
         let animationFrame = 0;
